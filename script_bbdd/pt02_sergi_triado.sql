@@ -23,7 +23,7 @@ SET time_zone = "+00:00";
 
 DROP DATABASE IF EXISTS `pt02_sergi_triado`;
 
-CREATE DATABASE IF NOT EXISTS `pt02_sergi_triado;`;
+CREATE DATABASE IF NOT EXISTS `pt02_sergi_triado`;
 
 USE `pt02_sergi_triado`;
 
