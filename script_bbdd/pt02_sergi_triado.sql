@@ -21,11 +21,11 @@ SET time_zone = "+00:00";
 -- Base de datos: `pt02_sergi_triado`
 --
 
-DROP DATABASE IF EXISTS `pt02_sergi_triado`;
+DROP DATABASE IF EXISTS `Pt02_sergi_triado`;
 
-CREATE DATABASE IF NOT EXISTS `pt02_sergi_triado`;
+CREATE DATABASE IF NOT EXISTS `Pt02_sergi_triado`;
 
-USE `pt02_sergi_triado`;
+USE `Pt02_sergi_triado`;
 
 -- --------------------------------------------------------
 
@@ -48,18 +48,8 @@ INSERT INTO `usuaris` (`id`, `nom`, `dni`, `adresa`) VALUES
 (1, 'SERGI', '12345678L', 'example@example.com'),
 (3, 'JOAN', '12435867P', 'papapap@gmail.com'),
 (5, 'Sergi', '99999999P', 'aaa@aaa.com'),
-(7, 'PAPO', 'AAAA', 'sasa@sasa.com'),
 (9, 'XAVI', '43223411F', 'yiyoyo@momo.net'),
-(10, 'XAVI', '32112367Y', 'tutit@aaa.es'),
-(13, 'NOU', 'ASDFA', 'qqqq@qqq.qq'),
-(14, 'PROVA', 'AWIEOAIWE', 'qpweoiqp@wq.asa'),
-(15, 'PROVO', 'ALSKJD', 'awoepiq@qweq.com'),
-(17, 'PARAVA', 'RESERQWE', 'ererere@rere.com'),
-(19, 'POPOPO', 'WERWERWE', 'qweqweq@qweq.cat'),
-(21, 'CLARA', '928349283', 'grgrrg@grrr.gr'),
-(22, 'MARTA', '12391', 'pprropo@qwpeoq.cat'),
-(24, 'OSCAR', '0912381', 'trieot@qwoepiq.net'),
-(26, 'PRIMO', '1329481', 'qweqw@popoa.com');
+(10, 'XAVI', '32112367Y', 'tutit@aaa.es')
 
 --
 -- Índices para tablas volcadas

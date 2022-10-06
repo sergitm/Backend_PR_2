@@ -13,41 +13,46 @@
 </head>
 <body>
     <?php
-
+    //Treballem les dades que ens arriben de l'usuari original
         include "validators.php";
+        
+        if (empty($_POST)) {
+            $nom_original = $usuari->nom;
+            $dni_original = $usuari->dni;
+            $email_original = $usuari->adresa;
+        }
 
         // Form data validation
-        if (!empty($_POST['insertar'])) {
+        if (!empty($_POST['update'])) {
             $errors = array(); 
 
-            (empty($_POST['nom'])) ? $errors['nom_missing'] = true : $nom = $_POST['nom'];
-
-            if (empty($_POST['dni'])) {
-                $errors['dni_missing'] = true;
+            if(empty($_POST['nom'])) {
+                $errors['nom_missing'] = true;
             } else {
-                $dni = $_POST['dni'];
-                try {
-                    $exists = Validators::dni_exists($dni);
-                } catch (Exception $e) {
-                    print '<p style=\'color:red\'>' . $e->getMessage() . '</p>';
-                };
+                $nom = $_POST['nom'];
             }
-                
 
-            (empty($_POST['email'])) ? $errors['email_missing'] = true : "";
-            
-            (!empty($_POST['email']) && !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) 
-                ? $errors['email_invalid'] = true 
-                : $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+            if (!empty($_POST['dni'])) {
+                $dni = $_POST['dni'];
+            }
 
-            $pattern = '/^[0-9]{8,8}[A-Z]$/i';
-            (!empty($_POST['dni']) && !preg_match($pattern, $dni)) ? $errors['dni_invalid'] = true : "";
+            if(empty($_POST['email'])){
+                $errors['email_missing'] = true;
+            } else {
+                if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
+                    $errors['email_invalid'] = true;
+                } else {
+                    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+                }
+            }
 
-            (isset($dni) && (isset($exists) && $exists === true)) ? $errors['dni_repetit'] = true : "";
-
+        } else {
+            $nom = $nom_original;
+            $dni = $dni_original;
+            $email = $email_original;
         }
     ?>
-    <!-- FORM -->
+    <!-- FORMULARI -->
     <h1>Nou usuari</h1>
     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
 
@@ -61,17 +66,7 @@
 
         <label for="dni">Introdueix el DNI: </label>
         <input type="text" id="dni" name="dni" placeholder="Introdueix un DNI" 
-            value="<?php echo (isset($dni)) ? htmlspecialchars(stripslashes(trim($dni))) : ""; ?>">
-
-        <?php if (!empty($errors['dni_missing'])) : ?>
-            <small style="color:red">El camp DNI és obligatori.</small>
-        <?php endif; ?>
-        <?php if (!empty($errors['dni_invalid'])) : ?>
-            <small style="color:red">DNI invàlid.</small>
-        <?php endif; ?>
-        <?php if (!empty($errors['dni_repetit'])) : ?>
-            <small style="color:red">Aquest DNI ja existeix.</small>
-        <?php endif; ?><br>
+            value="<?php echo (isset($dni)) ? htmlspecialchars(stripslashes(trim($dni))) : ""; ?>" readonly><br>
 
         <label for="email">Introdueix la teva adreça electrònica: </label>
         <input type="text" id="email" name="email" placeholder="Introdueix la adreça electrònica" 
@@ -84,7 +79,7 @@
             <small style="color:red">Adreça invàlida.</small>
         <?php endif; ?><br>
 
-        <input type="submit" name="insertar" value="Crear">
+        <input type="submit" name="update" value="Modificar">
     </form>
     <form action="../index.php">
         <input type="submit" name="tornar" value="Tornar">
@@ -93,14 +88,15 @@
 </html>
 
 <?php
-    // Construïm la petició a /modules/api/ (què és el que seria l'entrada al Backend) per insertar l'usuari
-    if (!empty($_POST['insertar']) && empty($errors)) {
+
+    // Construïm la petició a /modules/api/ (què és el que seria l'entrada al Backend) per modificar l'usuari
+    if (!empty($_POST['update']) && empty($errors)) {
 
         $env = json_decode(file_get_contents("../environment/environment.json"));
 
         $environment = $env->environment;
 
-        $url = $environment->protocol . $environment->baseUrl . $environment->dir->modules->api->create;
+        $url = $environment->protocol . $environment->baseUrl . $environment->dir->modules->api->update;
         
         $data = array('nom' => $nom, 'dni' => $dni, 'adresa' => $email);
 
@@ -114,8 +110,12 @@
         $context  = stream_context_create($options);
         $result = json_decode(file_get_contents($url, false, $context));
 
-        if (!empty($result->success)) { print '<small style=\'color:green\'>' . $result->success . '</small>';}
-        if (!empty($result->error)) { print '<small style=\'color:red\'>' . $result->error . '</small>'; }
         
+
+        if($result !== null) {
+            ($result->updated) 
+            ? print '<small style=\'color:green\'>' . $result->message . '</small>' 
+            : print '<small style=\'color:red\'>' . $result->message . '</small>';
+        }        
     }
 ?>

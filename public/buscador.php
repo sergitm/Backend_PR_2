@@ -1,3 +1,9 @@
+    <!--
+    /**
+     * @author Sergi Triadó <s.triado@sapalomera.cat>
+     */
+    -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +13,7 @@
     <title>Buscador d'usuaris</title>
 </head>
 <body>
+    <!-- Aquest input serveix per filtrar la llista d'usuaris -->
     <form name="read_form" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="GET">
         <input type="text" name="buscador" placeholder="Busca un usuari"> 
         <input type="submit" name="buscar" value="Buscar">
