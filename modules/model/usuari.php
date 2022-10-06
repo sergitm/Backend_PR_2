@@ -1,14 +1,23 @@
 <?php
-    
+
+    /**
+     * @author Sergi Triadó <s.triado@sapalomera.cat>
+     */
+        
+    /**
+     * Usuari
+     * implementa la interfície JsonSerializable perque els objectes d'aquesta classe es 
+     * puguin convertir en objectes JSON
+     */
     class Usuari implements JsonSerializable{
 
-        //PROPERTIES
+        // PROPERTIES
         private $id;
         private $nom;
         private $dni;
         private $email;
 
-        //CONSTRUCT
+        // CONSTRUCT
         public function __construct($nom, $dni, $email, $id = null)
         {
             $this->nom = $nom;
@@ -17,7 +26,7 @@
             $this->id = $id; 
         }
 
-        //GETTERS
+        // GETTERS
         public function getNom(){
             return $this->nom;
         }
@@ -31,7 +40,7 @@
             return $this->id;
         }
 
-        //SETTERS
+        // SETTERS
         public function setNom($nom){
             $this->nom = $nom;
         }
@@ -45,7 +54,14 @@
             $this->id = $id;
         }
 
-        //METHODS
+        // METHODS        
+        /**
+         * create
+         *
+         * @return void
+         * 
+         * Métode per introduir un usuari a la BBDD
+         */
         public function create(){
             $query = "INSERT INTO usuaris (id, nom, dni, adresa)
                         VALUES (:id, :nom, :dni, :adresa)";
@@ -65,7 +81,52 @@
                 return FALSE;
             }
         }
+        
+        /**
+         * delete
+         *
+         * @return void
+         * 
+         * Métode per eliminar un usuari de la BBDD
+         */
+        public function delete(){
+            $query = "DELETE FROM usuaris WHERE dni = :dni";
 
+            $params = array(':dni' => $this->getDni());
+
+            Connexio::connect();
+            $stmt = Connexio::execute($query, $params);
+            Connexio::close();
+
+            return $stmt;
+        }
+        
+        /**
+         * update
+         *
+         * @return void
+         * 
+         * Métode per modificar un usuari de la BBDD
+         */
+        public function update(){
+            $query = "UPDATE usuaris SET nom = :nom, adresa = :adresa WHERE id = :id";
+
+            $params = array(':nom' => $this->getNom(), ':adresa' => $this->getEmail(), ':id' => $this->getId());
+
+            Connexio::connect();
+            $stmt = Connexio::execute($query, $params);
+            Connexio::close();
+            
+            return $stmt;
+        }
+        
+        /**
+         * jsonSerialize
+         *
+         * @return void
+         * 
+         * Métode de la interfícia JsonSerializable que indica la seva estructura quan es converteixi a JSON
+         */
         public function jsonSerialize(){
             return [
                 'nom' => $this->getNom(),

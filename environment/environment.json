@@ -1,0 +1,18 @@
+{
+    "environment" : {
+        "protocol" : "http://",
+        
+        "baseUrl" : "localhost/backend_pr2/Backend_PR_2/",
+
+        "dir" : {
+            "modules" : {
+                "api" : {
+                    "create" : "modules/api/create.php",
+                    "read" : "modules/api/read.php",
+                    "update" : "modules/api/update.php",
+                    "delete" : "modules/api/delete.php"
+                }
+            }
+        }
+    }
+}

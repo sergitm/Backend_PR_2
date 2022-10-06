@@ -1,4 +1,13 @@
 <?php
+
+    /**
+     * @author Sergi Triadó <s.triado@sapalomera.cat>
+     */
+    
+    /**
+     * Database
+     * Clase per instanciar quan es vol fer una connexió
+     */
     class Database {
         // DB Params
         private $host = 'localhost';
@@ -7,7 +16,7 @@
         private $pwd = '';
         private $conn;
 
-        //DB Connect
+        // DB Connect
         public function connect(){
             $this->conn = null;
 
@@ -21,12 +30,16 @@
             return $this->conn;
         }
     }
-
+    
+    /**
+     * Connexio
+     * Clase que instancia a la clase anterior i gestiona les connexions
+     */
     class Connexio {
         private static $conn;
 
         public static function connect(){
-            //Connect nomes si no hi ha connexio previa
+            // Connect nomes si no hi ha connexio previa
             if (!isset(self::$conn)) {
                 $db = new Database();
                 self::$conn = $db->connect();
@@ -34,10 +47,10 @@
         }
 
         public static function execute($query, $params = array()){
-            //Prepare
+            // Prepare
             $stmt = self::$conn->prepare($query);
 
-            //Execute query
+            // Execute query
             if($stmt->execute($params)){
                 return $stmt;
             } else {
@@ -45,6 +58,7 @@
             }
         }
 
+        // Tancar connexió
         public static function close(){
             self::$conn = null;
         }
